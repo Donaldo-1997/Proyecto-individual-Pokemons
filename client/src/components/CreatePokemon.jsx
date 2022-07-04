@@ -1,8 +1,8 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
-import { getTypes, updatePokemon } from "../redux/actions"
+import { getTypes } from "../redux/actions"
+import { createPokemon, updatePokemon } from "../services/pokemon.services"
 import MessagePopUp from "./MessagePopUp.jsx"
 import Nav from './Nav.jsx'
 import './StyleCreatePokemon.css'
@@ -36,11 +36,11 @@ const validation = (state) => {
     return error
 }
 
-export default function CreatePokemon (props) {
-
-    const pokemonToUpdate = props.history.location.state // De aquí vienen datos del componente detail
+export default function CreatePokemon () {
 
     const history = useHistory()
+    const pokemonToUpdate = history.location.state  //props.history.location.state // De aquí vienen datos del componente detail
+
     const dispatch = useDispatch()
     const { types } = useSelector(state => state)
 
@@ -58,7 +58,7 @@ export default function CreatePokemon (props) {
         types: pokemonToUpdate ? [...pokemonToUpdate.types] :  []
     })
 
-    console.log(popUp);
+    console.log('pokemonToUpdate:', pokemonToUpdate);
 
     useEffect(() => {
 
@@ -95,54 +95,36 @@ export default function CreatePokemon (props) {
         
         if(Object.keys(errors).length === 0 && state.name.length > 0 ) {
 
-            if(pokemonToUpdate) {
+            if(pokemonToUpdate) {     
+                updatePokemon(pokemonToUpdate.id, state)
+                    .then(res => {
+                        console.log('res:', res)
+                        if(res.status === 200) {
+                            setState({ name: '', image: '', height: '', weight: '', hp: '', 
+                               attack: '', defense: '', speed: '', types: [] })
 
-                const res = dispatch(updatePokemon(pokemonToUpdate.id, state))
-                res.then(data => {
-                    setPopUp({ success: true, message: data })
-                    setState({
-                        name: '', image: '', height: '', weight: '', hp: '', 
-                        attack: '', defense: '', speed: '', types: []   
+                            history.push('/home', res.data)
+                        }
                     })
-
-                    history.push('/home', data)
-
-                })
-                .catch(error => console.log(error))
-                // axios.put(`http://localhost:3001/pokemons/${pokemonToUpdate.id}`, state)
-                // .then(res => {
-                //     console.log(res);
-                //     if(res.status === 200) {
-                //         setPopUp({ success: true, message: res.data })
-                //         setState({
-                //             name: '', image: '', height: '', weight: '', hp: '', 
-                //             attack: '', defense: '', speed: '', types: []   
-                //         })
-
-                //         history.push('/home', res.data)
-                //     }
-                //     else setPopUp({ success: false, message: res.data })
-                // })
-                // .catch(error => setPopUp({ success: false, message: error.data }))
-
+                    .catch(error => console.log(error))
 
             } else {
-
-                axios.post('http://localhost:3001/pokemons', state)
-                .then(res => {
-                    if(res.status === 201) {
-                        setPopUp({ success: true, message: res.data })
-                        setState({
-                            name: '', image: '', height: '', weight: '', hp: '', 
-                            attack: '', defense: '', speed: '', types: []   
-                        })
-
-                    }
-                    else setPopUp({ success: false, message: res.data })
-                })
-                .catch(error => {
-                    setPopUp({ success: false, message: error.data })
-                })
+                createPokemon(state)
+                    .then(res => {
+                        console.log('msg:', res)
+                        if(res.status === 201) {
+                            setPopUp({ success: true, message: res.data })
+                            setState({
+                                name: '', image: '', height: '', weight: '', hp: '', 
+                                attack: '', defense: '', speed: '', types: []   
+                            })
+    
+                        }
+                        else setPopUp({ success: false, message: res.data })
+                    })    
+                    .catch(error => {
+                        console.log(error);
+                    })
             }
 
             setTimeout(() => setPopUp(null), 3000) // Para quitar el mennsaje flotante

@@ -22,9 +22,9 @@ export default function DetailPokemon () {
     }, [])
 
     const handleDeletePokemon = (id) => {
-        const res = dispatch(deletePokemon(id))
-        res.then(message => history.push('/home', message)) // El segundo parametro es el "history.location.state"
-        .catch(error => console.log(error))
+        dispatch(deletePokemon(id))
+            .then(message => history.push('/home', message)) // El segundo parametro es el "history.location.state"
+            .catch(error => console.log(error))
     }
 
     return <>

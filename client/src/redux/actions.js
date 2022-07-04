@@ -99,18 +99,18 @@ export const deletePokemon = (id) => {
     }
 }
 
-export const updatePokemon = (id, values) => {
-    return async (dispatch) => {
-        try {
-            const { data } = await axios.put(`http://localhost:3001/pokemons/${id}`, values)
+// export const updatePokemon = (id, values) => {
+//     return async (dispatch) => {
+//         try {
+//             const { data } = await axios.put(`http://localhost:3001/pokemons/${id}`, values)
     
-            if(data.status === 200) dispatch({ type: 'UPDATE_POKEMON', payload: id })
+//             if(data.status === 200) dispatch({ type: 'UPDATE_POKEMON', payload: id })
     
-            return data
+//             return data
             
-        } catch (error) {
-            console.log(error);
-        }
-    }
-}
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     }
+// }
 
