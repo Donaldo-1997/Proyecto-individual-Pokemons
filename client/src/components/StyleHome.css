@@ -1,0 +1,258 @@
+body {
+    background-color: #15172b;
+    color: #fff;
+}
+
+.nav_bar {
+	box-shadow: 0px 19px 13px -9px #1b1b37;
+}
+
+.container_filter {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px;
+}
+
+.spinner {
+    margin: 50px auto;
+}
+
+.spinner img {
+    width: 100px;
+}
+
+.paginated {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 50px;
+	width: 300px;
+	margin: 0 auto;
+}
+
+.paginated button {
+    border: none;
+    background-color: #ff2c2c;
+    border-radius: 10px;
+    width: 60px;
+    height: 25px;
+    color: #fff;
+    box-shadow: #63636333 0px 2px 8px 0px;
+}
+
+.paginated button:hover {
+    background-color: #dc2b2b;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    cursor: pointer;
+}
+
+.paginated button:disabled {
+	background-color: #33394a;
+}
+
+.paginated span{
+	padding: 3px 10px;
+}
+
+.paginated span:hover {
+	background-color: #fff8f2;
+	color: #15172b;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+/* ----------SELECT---------- */
+
+.select_home select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+/* Eliminamos la fecha que por defecto aparece en el desplegable */
+.select_home select::-ms-expand {
+    display: none;
+}
+
+.select_home{
+    display: flex;
+    align-items: center;
+    width: 160px;
+	position: relative;
+}
+ 
+.select_home select{
+	display: inline-block;
+	width: 60%;
+	cursor: pointer;
+    margin-left: 5px;
+  	padding-left: 5px;
+  	height: 35px;
+  	outline: 0; 
+  	border: 0;
+	border-radius: 0;
+	background-color: #33394a;
+	color: #fff;
+	font-size: 1em;
+	font-family: 'Quicksand', sans-serif;
+	border:2px solid rgba(0,0,0,0.2);
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.25s ease;
+}
+.select_home select::-webkit-scrollbar {
+	/* -webkit-appearance: none; */
+    display: none;
+}
+
+/* 
+Creamos la fecha que aparece a la izquierda del select.
+Realmente este elemento es un cuadrado que sólo tienen
+dos bordes con color y que giramos con transform: rotate(-45deg);
+*/
+.select_home i{
+	position: relative;
+	right: 12%;
+	/* top: calc(50% - 5px); */
+	width: 5px;
+	height: 5px;
+	display: block;
+	border-left:4px solid #ff0;
+	border-bottom:4px solid #ff0;
+	transform: rotate(-45deg); /* Giramos el cuadrado */
+	transition: all 0.25s ease;
+}
+ 
+.select_home:hover i{
+	margin-top: 3px;
+}
+
+.select_home .option {
+	padding: 0 30px 0 10px;
+	min-height: 40px;
+	display: flex;
+	align-items: center;
+	background: #ff0;
+	border-top: #222 solid 1px;
+    color: #15172b;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	pointer-events: none;
+	order: 2;
+	z-index: 1;
+	transition: background .4s ease-in-out;
+	box-sizing: border-box;
+	overflow: hidden;
+	white-space: nowrap;
+
+}
+
+.search_by_name input {
+	border-radius: 5px 0px 0px 5px;
+}
+
+.search_by_name button {
+	height: 20px;
+	border-radius: 0px 5px 5px 0px;
+	background-color: #33394a;
+	border: none;
+	color: #fff;
+}
+
+.search_by_name button:hover{
+	transform: scale(1.03);
+	cursor: pointer;
+}
+
+.not_found {
+    width: auto;
+    height: 92vh;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.image_not_found {
+	width: 290px;
+}
+
+
+.landing {
+	display: flex;
+	justify-content: space-around;
+
+}
+
+
+#pokemon_background {
+	background-image: url('../img/toy-3633751_1280.jpg');
+	width: 99.7%;
+	height: 100vh;
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.pokemon_logo {
+	width: 360px;
+	margin-top: -250px;
+}
+
+#pokemon_background button {
+	width: 120px;
+	height: 50px;
+	border-radius: 20px;
+	background-color: #ffffff14;
+	color: #000000;
+	font-size: 24px;
+}
+
+#pokemon_background button:hover {
+	background-color: #ff0;
+	cursor: pointer;
+	transform: scale(1.2);
+}
+
+.pop_up_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: fit-content;
+	height: 50px;
+	position: absolute;
+	z-index: 5;
+	margin-left: 40%;
+}
+
+.pop_up {
+	box-sizing: border-box;
+	color: #fff;
+	border-radius: 10px;
+	padding: 5px 10px;
+	width: fit-content;
+	animation: popUp 3s ease-in-out;
+	font-style: italic;
+	font-family: sans-serif;
+}
+
+@keyframes popUp {
+	0%{
+		transform: rotateY(100px);
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+.success {
+	background-color: #00c500;
+}
+
+.fail {
+	background-color: red;
+}

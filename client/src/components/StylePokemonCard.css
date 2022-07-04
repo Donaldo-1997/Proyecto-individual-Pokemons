@@ -1,0 +1,56 @@
+.container_pokemons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.container_pokemons a {
+    text-decoration: none;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 20px;
+    box-sizing: border-box;
+    width: 250px;
+    height: 300px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    background-color: yellow;
+    margin: 10px;
+}
+
+.card:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transform: scale(1.02);
+}
+
+.card img {
+    width: 120px;
+}
+
+.info_pokemon {
+    padding: 0 20px;
+    text-align: center;
+    color: black;
+}
+
+.info_pokemon h2 {
+    margin: 0;
+}
+
+.card p, .card span {
+    color: black;
+    display: inline-block;
+}
+
+.type_card {
+    padding: 5px 10px;
+    margin-left: 5px;
+    background-color: #ff2c2c;
+    border-radius: 10px;
+}
