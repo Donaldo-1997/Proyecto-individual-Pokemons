@@ -75,11 +75,11 @@ router.post('/pokemons', async (req, res) => {
 
 
             if(created) res.status(201).send('Pokemon created successfully!')
-            else res.send(`Pokemon "${name}" already exists!`)
+            else res.status(400).send(`Pokemon "${name}" already exists!`)
 
         } catch (error) {
             console.log('Post', error)
-            res.json(error)
+            res.status(400).json(error)
         }
     } else {
         res.status(409).send('name field is required')
@@ -131,7 +131,7 @@ router.put('/pokemons/:id', async (req, res) => {
         res.status(200).send(`Pokemon "${name}" updated successfully`)
     } catch (error) {
         console.log(error);
-        res.send(error.message)
+        res.status(400).send(error)
     }
 })
 
@@ -143,7 +143,7 @@ router.delete('/pokemons/:id', async (req, res) => {
 
         res.status(200).send('Pokemon deleted successfully')
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error })
     }
 })
 

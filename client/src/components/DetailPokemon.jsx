@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from "react-router-dom"
+import { Link, useHistory, useParams } from "react-router-dom"
 import { cleanDetail, deletePokemon, getPokemonById, getPokemonByName } from "../redux/actions"
 import Nav from "./Nav"
 import './StyleDetailPokemon.css'
@@ -48,7 +48,9 @@ export default function DetailPokemon () {
                     ))}
                 </div>
                 { isNaN(pokemon.id) ? <div>
-                    <button onClick={() => history.push('/create', pokemon)} className="button_detail edit">Edit pokemon</button>
+                    <Link>
+                        <button onClick={() => history.push('/create', pokemon)} className="button_detail edit">Edit pokemon</button>
+                    </Link>
                     <button onClick={() => handleDeletePokemon(pokemon.id)} className="button_detail delete">Delete pokemon</button>
                 </div> : null }
             </div>

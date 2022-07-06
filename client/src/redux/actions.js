@@ -89,12 +89,13 @@ export const deletePokemon = (id) => {
         try {
             const { data } = await axios.delete(`${BASE_URL}/pokemons/${id}`)
     
-            if(data.status === 200) dispatch({ type: DELETE_POKEMON, payload: id })
+            dispatch({ type: DELETE_POKEMON, payload: id })
     
             return data
             
         } catch (error) {
             console.log(error);
+            throw error
         }
     }
 }

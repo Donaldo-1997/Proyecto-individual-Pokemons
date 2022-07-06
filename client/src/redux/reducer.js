@@ -11,16 +11,29 @@ export default function rootReducer (state = initialState, action) {
     const { copyPokemons } = state
 
     if(action.type === GET_ALL_POKEMONS) {
-        return { ...state, pokemons: action.payload, copyPokemons: action.payload }
+        return { 
+            ...state, 
+            pokemons: action.payload, 
+            copyPokemons: action.payload 
+        }
     }
     if(action.type === GET_POKEMON_BY_ID) {
-        return { ...state, pokemon: action.payload }
+        return { 
+            ...state, 
+            pokemon: action.payload 
+        }
     }
     if(action.type === GET_POKEMON_BY_NAME) {
-        return { ...state, pokemon: action.payload }
+        return { 
+            ...state, 
+            pokemon: action.payload 
+        }
     }
     if(action.type === GET_TYPES) {
-        return { ...state, types: action.payload }
+        return { 
+            ...state, 
+            types: action.payload 
+        }
     }
     if(action.type === GET_POKEMON_BY_TYPE) {
         return { 

@@ -59,7 +59,6 @@ export default function CreatePokemon () {
         types: pokemonToUpdate ? [...pokemonToUpdate.types] :  []
     })
 
-    // console.log('pokemonToUpdate:', pokemonToUpdate);
 
     useEffect(() => {
 
@@ -112,18 +111,15 @@ export default function CreatePokemon () {
                 createPokemon(state)
                     .then(res => {
                         console.log('msg:', res)
-                        if(res.status === 201) {
-                            setPopUp({ success: true, message: res.data })
-                            setState({
-                                name: '', image: '', height: '', weight: '', hp: '', 
-                                attack: '', defense: '', speed: '', types: []   
-                            })
-    
-                        }
-                        else setPopUp({ success: false, message: res.data })
+                        setPopUp({ success: true, message: res.data })
+                        setState({
+                            name: '', image: '', height: '', weight: '', hp: '', 
+                            attack: '', defense: '', speed: '', types: []   
+                        })
                     })    
                     .catch(error => {
                         console.log(error);
+                        setPopUp({ success: false, message: error.response.data })
                     })
             }
 

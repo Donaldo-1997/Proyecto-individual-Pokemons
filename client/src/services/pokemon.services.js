@@ -6,7 +6,7 @@ export const createPokemon = async (pokemonData) => {
         return data
         
     } catch (error) {
-        return error
+        throw error
     }
 }
 
@@ -16,6 +16,6 @@ export const updatePokemon = async (id, pokemonUpdated) => {
         return data
         
     } catch (error) {
-        return error
+        throw error
     }
 }
