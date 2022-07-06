@@ -13,8 +13,6 @@ export default function DetailPokemon () {
     const dispatch = useDispatch()
     const { pokemon } = useSelector(state => state)
 
-    console.log(pokemon);
-
     useEffect(() => {
         if(/^[a-zA-ZÀ-ÿ\s]{0,40}$/.test(parameter)) dispatch(getPokemonByName(parameter))
         else dispatch(getPokemonById(parameter))
@@ -30,10 +28,9 @@ export default function DetailPokemon () {
 
     return <>
         <Nav />
-        {pokemon ? 
         <section className="container_pokemon_detail">
             <div className="image_block">
-                <img src={pokemon.image} alt="pokemon" />
+                <img src={pokemon.image ? pokemon.image : spinner } alt="pokemon" />
             </div>
             <div className="info_detail">
                 <div className="back_btn"><span onClick={() => history.push('/home')}>←</span></div>
@@ -56,8 +53,5 @@ export default function DetailPokemon () {
                 </div> : null }
             </div>
         </section>
-        :
-        <div className="spinner"><img src={spinner} alt="loading" /></div>
-        }
     </>
 }

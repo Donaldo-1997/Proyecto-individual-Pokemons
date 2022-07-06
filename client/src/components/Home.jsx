@@ -16,7 +16,6 @@ import MessagePopUp from './MessagePopUp';
 export default function Home() {
 
     const history = useHistory()
-    console.log(history);
     const dispatch = useDispatch()
     const { pokemons, types, pokemon, copyPokemons } = useSelector(state => state)
 
@@ -92,9 +91,9 @@ export default function Home() {
                         <span>Types:</span>
                         <select onChange={handleChange} name="types">
                             <option value="alls">Alls</option>
-                            {types && types.map((type, i) => (
+                            {types && types.map((type, i) => 
                                 <option className="option" key={i} value={type}>{type}</option>
-                            ))}
+                            )}
                         </select>
                         <i></i>
                     </div>

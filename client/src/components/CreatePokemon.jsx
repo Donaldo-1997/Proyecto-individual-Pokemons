@@ -182,6 +182,7 @@ export default function CreatePokemon () {
                         onBlur={() => validation(state)}
                         value={state.hp}
                     />
+                    {errors.hp && <span className="error_message">{errors.hp}</span>}
                     <label htmlFor="hp" className="placeholder">Hp</label>
                 </div>
                 <div className="input-container ic2">
