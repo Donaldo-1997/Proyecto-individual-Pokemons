@@ -4,6 +4,7 @@ import { useHistory, useParams } from "react-router-dom"
 import { cleanDetail, deletePokemon, getPokemonById, getPokemonByName } from "../redux/actions"
 import Nav from "./Nav"
 import './StyleDetailPokemon.css'
+import spinner from '../img/spinner.gif'
 
 export default function DetailPokemon () {
 
@@ -29,19 +30,20 @@ export default function DetailPokemon () {
 
     return <>
         <Nav />
+        {pokemon ? 
         <section className="container_pokemon_detail">
             <div className="image_block">
                 <img src={pokemon.image} alt="pokemon" />
             </div>
             <div className="info_detail">
                 <div className="back_btn"><span onClick={() => history.push('/home')}>←</span></div>
-                <h2>Name: { pokemon.name }</h2>
-                <h4>Height: { pokemon.height }</h4>
-                <h4>Weight: { pokemon.weight }</h4>
-                <h4>Hp: { pokemon.hp }</h4>
-                <h4>Attack: { pokemon.attack }</h4>
-                <h4>Defense: { pokemon.defense }</h4>
-                <h4>Speed: { pokemon.speed }</h4>
+                <h2>Name: <i>{ pokemon.name }</i></h2>
+                <h4>Height: <i>{ pokemon.height ? pokemon.height : 'Undefined' }</i></h4>
+                <h4>Weight: <i>{ pokemon.weight ? pokemon.weight : 'Undefined' }</i></h4>
+                <h4>Hp: <i>{ pokemon.hp ? pokemon.hp : 'Undefined' }</i></h4>
+                <h4>Attack: <i>{ pokemon.attack ? pokemon.attack : 'Undefined' }</i></h4>
+                <h4>Defense: <i>{ pokemon.defense ? pokemon.defense : 'Undefined' }</i></h4>
+                <h4>Speed: <i>{ pokemon.speed ? pokemon.speed : 'Undefined' }</i></h4>
                 <div className="container_types">
                     <h4>Types: </h4>
                     {pokemon.types && pokemon.types.map((typeName, i) => (
@@ -54,5 +56,8 @@ export default function DetailPokemon () {
                 </div> : null }
             </div>
         </section>
+        :
+        <div className="spinner"><img src={spinner} alt="loading" /></div>
+        }
     </>
 }

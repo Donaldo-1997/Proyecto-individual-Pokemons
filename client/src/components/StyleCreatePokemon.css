@@ -28,33 +28,6 @@
 	grid-column: 1 / span 2;
 }
 
-/* .pop_up {
-	color: #fff;
-	position: absolute;
-	z-index: 5;
-	border-radius: 10px;
-	padding: 5px 10px;
-	width: fit-content;
-	margin: 0 10%;
-	animation: popUp 3s ease-in-out;
-	font-style: italic;
-	font-family: sans-serif;
-}
-
-@keyframes popUp {
-	100% {
-		opacity: 0;
-	}
-}
-
-.success {
-	background-color: #00c500;
-}
-
-.fail {
-	background-color: red;
-} */
-
 .input-container {
 	height: 50px;
 	position: relative;

@@ -18,5 +18,22 @@ describe('Pokemon model', () => {
         Pokemon.create({ name: 'Pikachu' });
       });
     });
+
+    describe("create a new pokemon", () => {
+			it("should work when its a valid pokemon", () => {
+				Pokemon.create({
+					name: "test",
+					hp: 12,
+					attack: 12,
+					defense: 12,
+					speed: 12,
+					height: 12,
+					weight: 12,
+					img: 12,
+					types: ["fire", "water"],
+				});
+			});
+		});
+    
   });
 });

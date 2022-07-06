@@ -62,7 +62,6 @@ router.post('/pokemons', async (req, res) => {
         try {
             if(image.length === 0) image = undefined
 
-            // let typesDB = []
             const [ newPokemon, created ] = await Pokemon.findOrCreate({ 
                 where: { name },
                 defaults: { image, hp, attack, defense, speed, height, weight } 
@@ -104,21 +103,35 @@ router.put('/pokemons/:id', async (req, res) => {
     const { name, image, hp, attack, defense, speed, height, weight, types  } = req.body
 
     try {
-        const pokemon = await Pokemon.findOne({ where: { id }, include: Type })
+       
+        const pokemonUpdated = await Pokemon.findOne({ where: { id }, include: Type })
 
+        const oldTypes = pokemonUpdated.types.map(types => types.dataValues.id)
+        await pokemonUpdated.removeTypes(oldTypes)
+        // const oldTypes = pokemonUpdated.types
+        // oldTypes.forEach(async ({ dataValues }) => await pokemonUpdated.removeType(dataValues.id))
         
-        pokemon.set({ name, image, hp, attack, defense, speed, height, weight })
+        const typesDB = await Type.findAll({ where: { name: { [Op.or]: types } } })
 
-        const typesDB = types ? await Type.findAll({ where: { name: { [Op.or]: types } } }) : []
+        typesDB.forEach( async ({ dataValues }) => await pokemonUpdated.addType(dataValues.id))
 
-        typesDB.forEach( async ({ dataValues }) => await pokemon.addType(dataValues.id))
+        pokemonUpdated.set({
+            name,
+            image,
+            hp,
+            attack,
+            defense,
+            speed,
+            height,
+            weight
+        })
 
-        await pokemon.save()
+        await pokemonUpdated.save()
 
         res.status(200).send(`Pokemon "${name}" updated successfully`)
-
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        console.log(error);
+        res.send(error.message)
     }
 })
 

@@ -20,5 +20,12 @@ describe('Pokemon routes', () => {
     it('should get 200', () =>
       agent.get('/pokemons').expect(200)
     );
+    it('should get 200', () =>
+      agent.get('/pokemons').then(res => {
+        // console.log(res.body);
+        res.expect
+      })
+      .catch(error => console.log(error))
+    );
   });
 });

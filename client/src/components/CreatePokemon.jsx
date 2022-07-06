@@ -9,7 +9,7 @@ import './StyleCreatePokemon.css'
 
 const validation = (state) => {
 
-    // console.log('state: ', state);
+    console.log('state: ', state);
 
     const error = {}
     const regexUrl = /[(http(s)?):(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*){0,255}$/
@@ -30,8 +30,9 @@ const validation = (state) => {
     if(state.height && (state.height > 100 || state.height < 0)) error.height = 'Must be in the range 0 to 100'
     if(state.weight && (state.weight > 100 || state.weight < 0)) error.weight = 'Must be in the range 0 to 100'
     if(state.types.length === 0) error.types = 'Select at least one type!'
+    if(state.types.length > 3) error.types = 'You can only select three types!'
 
-    // console.log('error: ', error);
+    console.log('error: ', error);
 
     return error
 }
@@ -58,7 +59,7 @@ export default function CreatePokemon () {
         types: pokemonToUpdate ? [...pokemonToUpdate.types] :  []
     })
 
-    console.log('pokemonToUpdate:', pokemonToUpdate);
+    // console.log('pokemonToUpdate:', pokemonToUpdate);
 
     useEffect(() => {
 
@@ -66,14 +67,13 @@ export default function CreatePokemon () {
         
     }, [])
 
-    // useEffect(() => {}, [successfully])
 
     const handleChange = (e) => {
         // No consultar el estado desde aquí porque me dará un estado anterior
 
         if(e.target.name === 'types') {
             if(!state.types.includes(e.target.value)) {
-                setState({ ...state, types: [...state.types, e.target.value] })
+                setState({ ...state, types: state.types.length <= 3 ? [...state.types, e.target.value] : state.types })
                 setErrors(validation({ ...state, types: [...state.types, e.target.value] }))
 
             } else setErrors({...errors, types: "Types cannot be repeated!"})
