@@ -113,7 +113,7 @@ router.put('/pokemons/:id', async (req, res) => {
         
         const typesDB = await Type.findAll({ where: { name: { [Op.or]: types } } })
 
-        typesDB.forEach( async ({ dataValues }) => await pokemonUpdated.addType(dataValues.id))
+        await pokemonUpdated.addTypes(typesDB.map(type => type.dataValues.id))
 
         pokemonUpdated.set({
             name,
