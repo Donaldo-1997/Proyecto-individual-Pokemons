@@ -4,7 +4,7 @@ import './StylePokemonCard.css'
 export default function PokemonCard ({ id, image, name, types }) {
     return (
         <div className='card'>
-            <Link to={`/detail/${id}`} >
+            <Link to={{ pathname:`/detail/${id}`}} >
                 <img src={image} alt="pokemon" />
             </Link>
             <div className='info_pokemon'>
