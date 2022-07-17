@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPokemons, getTypes, getPokemonByName, getPokemonByType, getPokemonFrom, getPokemonInOrder } from '../redux/actions';
+import { getAllPokemons, getPokemonByName, getPokemonByType, getPokemonFrom, getPokemonInOrder, getTypes } from '../redux/actions';
 import PokemonCard from './PokemonCard.jsx';
 import Pagination from './Pagination.jsx';
 import Nav from './Nav.jsx'
@@ -11,16 +11,17 @@ import spinner from '../img/spinner.gif'
 
 import './StyleHome.css'
 import MessagePopUp from './MessagePopUp';
+import Filters from './Filters';
+import SearchBar from "./SearchBar"
 
 
 export default function Home() {
 
     const history = useHistory()
     const dispatch = useDispatch()
-    const { pokemons, types, pokemon, copyPokemons } = useSelector(state => state)
+    const { pokemons, copyPokemons } = useSelector(state => state)
 
     const [ popUp, setPopUp ] = useState(null) // mensage flotante
-    const [ name, setName ] = useState('')
     const [ notFound, setNotFound ] = useState(null)
 
     const [currentPage, setCurrentPage] = useState(1)
@@ -42,43 +43,23 @@ export default function Home() {
     }
 
     useEffect(() => {
-        dispatch(getAllPokemons())
-        dispatch(getTypes())
+        if(!copyPokemons.length) {
+            dispatch(getAllPokemons())
+            dispatch(getTypes())
+        }
 
-        if(history.location.state) setPopUp({ success: true, message: history.location.state })
+        if(history.location.state) {
+            setPopUp({ success: true, message: history.location.state })
+            setTimeout(() => setPopUp(null), 3000) // Para quitar el mennsaje flotante
+        }
 
-        setTimeout(() => setPopUp(null), 3000) // Para quitar el mennsaje flotante
         
     }, []);
 
 
-    const handleChange = (e) => {
-        setCurrentPage(1)
-        const { name, value } = e.target
-
-        if(name === 'name') {
-            setName(value)
-            dispatch(getPokemonByName(value))
-        }
-        else if(name === 'types') dispatch(getPokemonByType(value))
-        else if(name === 'from') dispatch(getPokemonFrom(value))
-        else if(name === 'order') dispatch(getPokemonInOrder(value))
-  
-     }
- 
-     const searchPokemon = (e) => {
-        e.preventDefault()
-        const name = e.target[0].value
-
-        if(pokemon.id) {
-            setName('')
-            history.push(`/detail/${name}`)
-        }
-        else {
-            setNotFound('Pokemon not found!')
-            setName('')
-        }
-     }
+    // DEBUG - ZONE
+    console.log('pokemons:', pokemons);
+    console.log('currentPokemons:', currentPokemons);
 
     return (
         <>
@@ -87,39 +68,8 @@ export default function Home() {
         <div className="allHome">
             <div className='nav_bar'>
                 <div className="container_filter">
-                    <div className="select_home">
-                        <span>Types:</span>
-                        <select onChange={handleChange} name="types">
-                            <option value="alls">Alls</option>
-                            {types && types.map((type, i) => 
-                                <option className="option" key={i} value={type}>{type}</option>
-                            )}
-                        </select>
-                        <i></i>
-                    </div>
-                    <div className="select_home">
-                        <span>From:</span>
-                        <select onChange={handleChange} name="from">
-                            <option className="option" value="alls">Alls</option>
-                            <option className="option" value="api">Api</option>
-                            <option className="option" value="created">Created</option>
-                        </select>
-                        <i></i>
-                    </div>
-                    <div className="select_home">
-                        <span>Order:</span>
-                        <select onChange={handleChange} name="order" >
-                            <option className="option" value="ASC">ASC</option>
-                            <option className="option" value="DESC">DESC</option>
-                        </select>
-                        <i></i>
-                    </div>
-                    <div className="search_by_name">
-                        <form onSubmit={searchPokemon}>
-                            <input onChange={handleChange} type="text" name="name" value={name} />
-                            <button type="submit">Search</button>
-                        </form>
-                    </div>
+                    <Filters setCurrentPage={setCurrentPage} />
+                    <SearchBar setNotFound={setNotFound} />
                 </div>
                 <Pagination 
                     handleNext={handleNext}
@@ -146,7 +96,7 @@ export default function Home() {
                                 id={c.id}
                                 image={c.image}
                                 name={c.name}
-                                types={c.types} 
+                                types={c.types}
                             />)
                     : <div className="spinner">{ copyPokemons.length ? <h1>There are not pokemons!</h1> : <img src={spinner} alt="loading" /> }</div> 
                 }

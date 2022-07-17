@@ -12,25 +12,30 @@ const router = Router();
 router.get('/pokemons', async (req, res) => {
     const { name } = req.query
 
-    try {
         if(name) {
-            let pokemon = await Pokemon.findOne({ where: { name }, include: Type })
+            try {
+                let pokemon = await Pokemon.findOne({ where: { name }, include: Type })
+    
+                if(pokemon === null) pokemon = await getByNameApi(name)
 
-            if(pokemon === null) pokemon = await getByNameApi(name)
-
-            res.status(200).json(pokemon)
+                res.status(200).json(pokemon)
+                
+            } catch (error) {
+                res.status(404).send(`Pokemon "${name}" not found`)
+            }
 
         } else {
-            // BUSCANDO TODOS
-            const pokemonsDb = await Pokemon.findAll({ include: Type })
-            const pokemonsApi = await getAllsApi()
-
-            res.status(200).json([...pokemonsDb, ...pokemonsApi])
+            try {
+                // BUSCANDO TODOS
+                const pokemonsDb = await Pokemon.findAll({ include: Type })
+                const pokemonsApi = await getAllsApi()
+    
+                res.status(200).json([...pokemonsDb, ...pokemonsApi])
+            } catch (error) {
+                res.status(500).json(error)
+            }
         }
-    } catch (error) {
-        console.log('Get /pokemons', error)
-        res.json(error)
-    }
+   
     
 })
 
@@ -51,7 +56,7 @@ router.get('/pokemons/:id', async (req, res) => {
 
     } catch (error) {
         console.log('Get /pokemon/:id :', error)
-        res.json(error)
+        res.status(500).json(error)
     }
 })
 
@@ -94,7 +99,7 @@ router.get('/types', async (req, res) => {
 
     } catch (error) {
         console.log('Post', error)
-        res.json(error)
+        res.status(500).json(error)
     }
 })
 

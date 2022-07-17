@@ -6,28 +6,33 @@ let fastLoadPokemons = []
 module.exports = {
     getAllsApi: async () => {
         if(!fastLoadPokemons.length) {
-            const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=40')
-            const pokePromises = []
-            // requests a "p.url" para obtener la info necesaria
-            data.results.forEach( p => pokePromises.push(axios.get(p.url)) )
-
-            const result = (await Promise.all(pokePromises)).map(p => p.data)
-            // console.log('pokePromises',pokePromises)
-            const pokemons = result.map(p => ({
-                id: p.id,
-                name: p.name,
-                image: p.sprites.other.dream_world.front_default,
-                height: p.height,
-                weight: p.weight,
-                types: p.types.map(t => ({ name: t.type.name })),
-                hp: p.stats[0].base_stat,
-                attack: p.stats[1].base_stat,
-                defense: p.stats[2].base_stat,
-                speed: p.stats[5].base_stat,
-            }))
-
-            fastLoadPokemons = [...pokemons]
-            return pokemons     
+            try {
+                const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=40')
+                const pokePromises = []
+                // requests a "p.url" para obtener la info necesaria
+                data.results.forEach( p => pokePromises.push(axios.get(p.url)) )
+    
+                const result = (await Promise.all(pokePromises)).map(p => p.data)
+                // console.log('pokePromises',pokePromises)
+                const pokemons = result.map(p => ({
+                    id: p.id,
+                    name: p.name,
+                    image: p.sprites.other.dream_world.front_default,
+                    height: p.height,
+                    weight: p.weight,
+                    types: p.types.map(t => ({ name: t.type.name })),
+                    hp: p.stats[0].base_stat,
+                    attack: p.stats[1].base_stat,
+                    defense: p.stats[2].base_stat,
+                    speed: p.stats[5].base_stat,
+                }))
+    
+                fastLoadPokemons = [...pokemons]
+                return pokemons     
+                
+            } catch (error) {
+                throw error
+            }
         }
 
         return fastLoadPokemons;
@@ -70,7 +75,7 @@ module.exports = {
             return types
             
         } catch (error) {
-            return error
+            throw error
         }
     },
 
@@ -93,7 +98,7 @@ module.exports = {
             return pokemon
 
         } catch (error) {
-            return error
+            throw error
         }
     },
 
@@ -116,7 +121,7 @@ module.exports = {
             return pokemon
 
         } catch (error) {
-            return error
+            throw error
         }
     }
 }

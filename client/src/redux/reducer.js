@@ -4,7 +4,8 @@ const initialState = {
     pokemons: [],
     copyPokemons: [],
     pokemon: {},
-    types: []
+    types: [],
+    filter: []
 }
 
 export default function rootReducer (state = initialState, action) {
@@ -13,7 +14,7 @@ export default function rootReducer (state = initialState, action) {
     if(action.type === GET_ALL_POKEMONS) {
         return { 
             ...state, 
-            pokemons: action.payload, 
+            pokemons: state.pokemons.length ? state.pokemons : action.payload, 
             copyPokemons: action.payload 
         }
     }
@@ -65,6 +66,13 @@ export default function rootReducer (state = initialState, action) {
         return {
             ...state,
             pokemons: state.pokemons.filter(pokemon => pokemon.id !== action.payload)
+        }
+    }
+
+    if(action.type === 'FILTERED') {
+        return {
+            ...state,
+            filter: action.payload
         }
     }
 
