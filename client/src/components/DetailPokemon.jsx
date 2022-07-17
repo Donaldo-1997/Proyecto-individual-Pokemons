@@ -21,10 +21,14 @@ export default function DetailPokemon () {
     }, [])
 
     const handleDeletePokemon = (id) => {
-        dispatch(deletePokemon(id))
+        const confirmation = window.confirm('Are you sure to delete?')
+        if(confirmation) dispatch(deletePokemon(id))
             .then(message => history.push('/home', message)) // El segundo parametro es el "history.location.state"
             .catch(error => console.log(error))
     }
+
+    // console.log(history);
+    console.log(pokemon);
 
     return <>
         <Nav />
@@ -33,7 +37,9 @@ export default function DetailPokemon () {
                 <img src={pokemon.image ? pokemon.image : spinner } alt="pokemon" />
             </div>
             <div className="info_detail">
-                <div className="back_btn"><span onClick={() => history.push('/home')}>←</span></div>
+                <div className="back_btn">
+                    <span onClick={() => history.goBack()}>←</span>
+                </div>
                 <h2>Name: <i>{ pokemon.name }</i></h2>
                 <h4>Height: <i>{ pokemon.height ? pokemon.height : 'Undefined' }</i></h4>
                 <h4>Weight: <i>{ pokemon.weight ? pokemon.weight : 'Undefined' }</i></h4>
@@ -48,8 +54,9 @@ export default function DetailPokemon () {
                     ))}
                 </div>
                 { isNaN(pokemon.id) ? <div>
-                    <Link>
-                        <button onClick={() => history.push('/create', pokemon)} className="button_detail edit">Edit pokemon</button>
+                    <Link to={{ pathname: '/create', state: pokemon }}>
+                        <button className="button_detail edit">Edit pokemon</button>
+                        {/* <button onClick={() => history.push('/create', pokemon)} className="button_detail edit">Edit pokemon</button> */}
                     </Link>
                     <button onClick={() => handleDeletePokemon(pokemon.id)} className="button_detail delete">Delete pokemon</button>
                 </div> : null }

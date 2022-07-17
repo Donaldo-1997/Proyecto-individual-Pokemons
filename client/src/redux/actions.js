@@ -22,6 +22,7 @@ export const getAllPokemons = () => {
             
         } catch (error) {
             console.log(error)
+            throw error
         }
     }
 }
@@ -36,7 +37,7 @@ export const getPokemonById = (id) => {
             dispatch({ type: GET_POKEMON_BY_ID, payload: data })
             
         } catch (error) {
-            console.log(error);
+            throw error
         }
     }
 }
@@ -50,8 +51,9 @@ export const getPokemonByName = (name) => {
             
             dispatch({ type: GET_POKEMON_BY_NAME, payload: data })
             
+            return data
         } catch (error) {
-            console.log(error);
+            throw error
         }
     }
 }
@@ -64,6 +66,7 @@ export const getTypes = () => {
             
         } catch (error) {
             console.log(error);
+            throw error
         }
     }
 }
@@ -76,7 +79,7 @@ export const getPokemonFrom = (origin) => {
     return { type: GET_POKEMON_FROM, payload: origin }
 }
 
-export const getPokemonInOrder = (order) => {
+export const getPokemonInOrder = (order, by) => {
     return { type: GET_POKEMON_IN_ORDER, payload: order }
 }
 
@@ -100,3 +103,9 @@ export const deletePokemon = (id) => {
     }
 }
 
+export const filtered = (filter) => {
+    return {
+        type: 'FILTERED',
+        payload: filter
+    }
+}
