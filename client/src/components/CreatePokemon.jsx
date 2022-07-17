@@ -41,7 +41,8 @@ export default function CreatePokemon () {
 
     const history = useHistory()
     const pokemonToUpdate = history.location.state  //props.history.location.state // De aquí vienen datos del componente detail
-
+    console.log('pokemonToUpdate:', pokemonToUpdate);
+    console.log('pokemonToUpdate:', pokemonToUpdate);
     const dispatch = useDispatch()
     const { types } = useSelector(state => state)
 
