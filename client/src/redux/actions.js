@@ -10,7 +10,7 @@ export const GET_TYPES = 'GET_TYPES'
 export const CLEAN_DETAIL = 'CLEAN_DETAIL'
 export const DELETE_POKEMON = 'DELETE_POKEMON'
 
-const BASE_URL = 'https://pokemon1997.herokuapp.com/'
+const BASE_URL = 'https://pokemon1997.herokuapp.com'
 
 export const getAllPokemons = () => {
     return async (dispatch) => {
