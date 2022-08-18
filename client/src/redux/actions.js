@@ -10,7 +10,7 @@ export const GET_TYPES = 'GET_TYPES'
 export const CLEAN_DETAIL = 'CLEAN_DETAIL'
 export const DELETE_POKEMON = 'DELETE_POKEMON'
 
-const BASE_URL = 'http://localhost:3001'
+const BASE_URL = 'https://pokemon1997.herokuapp.com/'
 
 export const getAllPokemons = () => {
     return async (dispatch) => {
@@ -61,7 +61,7 @@ export const getPokemonByName = (name) => {
 export const getTypes = () => {
     return async (dispatch) => {
         try {
-            const { data } = await axios.get('http://localhost:3001/types')
+            const { data } = await axios.get(`${BASE_URL}/types`)
             dispatch({ type: GET_TYPES, payload: data.map(t => t.name)})
             
         } catch (error) {
