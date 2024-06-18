@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "test": "mocha -w ./tests/*/.spec.js"
+    "dev": "nodemon ."
   },
-  "author": "Henry",
+  "author": "Donaldojbm",
   "license": "ISC",
   "engines": {
     "node": ">=12.18.3",

@@ -2,39 +2,36 @@ const { Router } = require('express');
 const { Op } = require('sequelize');
 const { getAllsApi, getByNameApi, getByIdApi } = require('../controllers/pokemon.controller');
 const { Pokemon, Type } = require('../db')
-// Importar todos los routers;
-// Ejemplo: const authRouter = require('./auth.js');
 
 const router = Router();
 
-// Configurar los routers
-// Ejemplo: router.use('/auth', authRouter);
 router.get('/pokemons', async (req, res) => {
     const { name } = req.query
 
-        if(name) {
-            try {
-                let pokemon = await Pokemon.findOne({ where: { name }, include: Type })
-    
-                if(pokemon === null) pokemon = await getByNameApi(name)
+    if(name) {
+        try {
+            let pokemon = await Pokemon.findOne({ where: { name }, include: Type })
 
-                res.status(200).json(pokemon)
-                
-            } catch (error) {
-                res.status(404).send(`Pokemon "${name}" not found`)
-            }
+            if(pokemon === null) pokemon = await getByNameApi(name)
 
-        } else {
-            try {
-                // BUSCANDO TODOS
-                const pokemonsDb = await Pokemon.findAll({ include: Type })
-                const pokemonsApi = await getAllsApi()
-    
-                res.status(200).json([...pokemonsDb, ...pokemonsApi])
-            } catch (error) {
-                res.status(500).json(error)
-            }
+            res.status(200).json(pokemon)
+            
+        } catch (error) {
+            res.status(404).send(`Pokemon "${name}" not found`)
         }
+
+    } else {
+        try {
+            // BUSCANDO TODOS
+            const pokemonsDb = await Pokemon.findAll({ include: Type })
+            const pokemonsApi = await getAllsApi()
+
+            res.status(200).json([...pokemonsDb, ...pokemonsApi])
+
+        } catch (error) {
+            res.status(500).json(error)
+        }
+    }
    
     
 })
@@ -52,6 +49,7 @@ router.get('/pokemons/:id', async (req, res) => {
         else pokemon = await getByIdApi(id)
 
         if(pokemon) res.status(200).json(pokemon)
+
         else res.status(404).send('Pokemon not found!')
 
     } catch (error) {
@@ -61,26 +59,29 @@ router.get('/pokemons/:id', async (req, res) => {
 })
 
 router.post('/pokemons', async (req, res) => {
-    let { name, image, hp, attack, defense, speed, height, weight, types } = req.body
+    const { name, hp, attack, defense, speed, height, weight, types } = req.body
 
     if(name) {
         try {
-            if(image.length === 0) image = undefined
+            const image = req.body.image.length ? req.body.image : undefined
 
             const [ newPokemon, created ] = await Pokemon.findOrCreate({ 
                 where: { name },
                 defaults: { image, hp, attack, defense, speed, height, weight } 
             })
 
-            const typesDB = types ? await Type.findAll({
-                where: { name: { [Op.or]: types } }
-            }) : []
+            if(created) {
+                const typesDB = types ? await Type.findAll({
+                    where: { name: { [Op.or]: types } }
+                }) : []
+    
+                typesDB.forEach( async ({ dataValues }) => await newPokemon.addType(dataValues.id))
 
-            typesDB.forEach( async ({ dataValues }) => await newPokemon.addType(dataValues.id))
+                res.status(201).send('Pokemon created successfully!')
 
-
-            if(created) res.status(201).send('Pokemon created successfully!')
-            else res.status(400).send(`Pokemon "${name}" already exists!`)
+            } else {
+                res.status(400).send(`Pokemon "${name}" already exists!`)
+            }
 
         } catch (error) {
             console.log('Post', error)
@@ -98,7 +99,6 @@ router.get('/types', async (req, res) => {
         res.status(200).json(types)
 
     } catch (error) {
-        console.log('Post', error)
         res.status(500).json(error)
     }
 })
@@ -134,6 +134,7 @@ router.put('/pokemons/:id', async (req, res) => {
         await pokemonUpdated.save()
 
         res.status(200).send(`Pokemon "${name}" updated successfully`)
+        
     } catch (error) {
         console.log(error);
         res.status(400).send(error)

@@ -4,16 +4,23 @@ const fs = require('fs');
 const path = require('path');
 
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
+const { 
+  POSTGRES_URL,
+  POSTGRES_USER,
+  POSTGRES_HOST,
+  POSTGRES_PASSWORD,
+  POSTGRES_DATABASE 
+} = process.env;
+
 let sequelize =
   process.env.NODE_ENV === "production"
     ? new Sequelize({
-        database: DB_NAME,
+        database: POSTGRES_DATABASE,
         dialect: "postgres",
-        host: DB_HOST,
+        host: POSTGRES_HOST,
         port: 5432,
-        username: DB_USER,
-        password: DB_PASSWORD,
+        username: POSTGRES_USER,
+        password: POSTGRES_PASSWORD,
         pool: {
           max: 3,
           min: 1,
@@ -30,7 +37,7 @@ let sequelize =
         ssl: true,
       })
     : new Sequelize(
-        `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/pokemon`,
+        `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DATABASE}`,
         { logging: false, native: false }
       );
 
@@ -64,5 +71,5 @@ Type.belongsToMany(Pokemon, { through: 'PokemonType', timestamps: false })
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');
-  conn: sequelize,     // para importart la conexión { conn } = require('./db.js');
+  conn: sequelize,     // para importar la conexión { conn } = require('./db.js');
 };
