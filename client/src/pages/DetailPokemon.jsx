@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useHistory, useParams } from "react-router-dom"
 import { cleanDetail, deletePokemon, getPokemonById, getPokemonByName } from "../redux/actions"
-import Nav from "./Nav"
+import Nav from "../components/Nav"
 import './StyleDetailPokemon.css'
 import spinner from '../img/spinner.gif'
 

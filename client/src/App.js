@@ -1,9 +1,9 @@
 import { Route, Switch } from 'react-router-dom';
-import Home from './components/Home.jsx'
-import DetailPokemon from './components/DetailPokemon.jsx'
-import CreatePokemon from './components/CreatePokemon.jsx'
-import Landing from './components/Landing.jsx'
-import NotFound from './components/NotFound.jsx';
+import Home from './pages/Home.jsx'
+import DetailPokemon from './pages/DetailPokemon.jsx'
+import CreateOrUpdatePokemon from './pages/CreateOrUpdatePokemon.jsx'
+import Landing from './pages/Landing.jsx'
+import NotFound from './pages/NotFound.jsx';
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         <Route exact path='/' component={Landing} />
         <Route exact path='/home' component={Home} />
         <Route exact path='/detail/:parameter' component={DetailPokemon} />
-        <Route exact path='/create' component={CreatePokemon} />
+        <Route exact path='/create' component={CreateOrUpdatePokemon} />
         <Route path='*' component={NotFound} />
       </Switch>
     </div>

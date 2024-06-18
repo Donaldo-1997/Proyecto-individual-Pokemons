@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPokemons, getPokemonByName, getPokemonByType, getPokemonFrom, getPokemonInOrder, getTypes } from '../redux/actions';
-import PokemonCard from './PokemonCard.jsx';
-import Pagination from './Pagination.jsx';
-import Nav from './Nav.jsx'
+import PokemonCard from '../components/PokemonCard.jsx';
+import Pagination from '../components/Pagination.jsx';
+import Nav from '../components/Nav.jsx'
 import { useHistory } from 'react-router-dom';
 
 import pokemonNotFound from '../img/pokemon-go-1574001_1280.webp'
 import spinner from '../img/spinner.gif'
 
 import './StyleHome.css'
-import MessagePopUp from './MessagePopUp';
-import Filters from './Filters';
-import SearchBar from "./SearchBar"
+import MessagePopUp from '../components/MessagePopUp';
+import Filters from '../components/Filters';
+import SearchBar from "../components/SearchBar"
 
 
 export default function Home() {
@@ -58,8 +58,8 @@ export default function Home() {
 
 
     // DEBUG - ZONE
-    console.log('pokemons:', pokemons);
-    console.log('currentPokemons:', currentPokemons);
+    // console.log('pokemons:', pokemons);
+    // console.log('currentPokemons:', currentPokemons);
 
     return (
         <>

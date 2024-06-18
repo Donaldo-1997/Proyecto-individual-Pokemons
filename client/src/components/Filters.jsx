@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getPokemonByType, getPokemonFrom, getPokemonInOrder } from '../redux/actions';
 
@@ -6,25 +6,36 @@ function Filters({ setCurrentPage }) {
 
     const dispatch = useDispatch()
     const { types } = useSelector(state => state)
+    const [filters, setFilters] = useState(null)
 
     const handleChange = (e) => {
         setCurrentPage(1)
         const { name, value } = e.target
+        const newFilter = {
+            ...filters,
+            [name]: value
+        }
 
-        if(name === 'types') dispatch(getPokemonByType(value))
-        else if(name === 'from') dispatch(getPokemonFrom(value))
-        else if(name === 'order') dispatch(getPokemonInOrder(value))
+        if(name === 'type') { 
+            setFilters({ type: value })
+            dispatch(getPokemonByType(value))
+        }
+        else if(name === 'from') {
+            setFilters(newFilter)
+            dispatch(getPokemonFrom(value, newFilter))
+        }
+        else if(name === 'order') {
+            setFilters(newFilter)
+            dispatch(getPokemonInOrder(value, newFilter))
+        }
     }
 
-    console.log('componente Filters');
- 
     return (
         <>
             <div className="select_home">
                 <span>Types:</span>
-                <select onChange={handleChange} name="types">
+                <select onChange={handleChange} name="type">
                     <option value="alls">Alls</option>
-                    {/* <option value="alls">{filter.types ? filter.types : 'Alls'}</option> */}
                     {types && types.map((type, i) =>
                         <option className="option" key={i} value={type} >{type}</option>
                     )}

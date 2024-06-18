@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { useHistory } from "react-router-dom"
 import { getTypes } from "../redux/actions"
 import { createPokemon, updatePokemon } from "../services/pokemon.services"
-import MessagePopUp from "./MessagePopUp.jsx"
-import Nav from './Nav.jsx'
+import MessagePopUp from "../components/MessagePopUp.jsx"
+import Nav from '../components/Nav.jsx'
 import './StyleCreatePokemon.css'
 
 const validation = (state) => {
@@ -12,11 +12,12 @@ const validation = (state) => {
     console.log('state: ', state);
 
     const error = {}
-    const regexUrl = /[(http(s)?):(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*){0,255}$/
+    const onlyUrl = /[(http(s)?):(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*){0,255}$/
+    const onlyLetters = /^[a-zA-ZÀ-ÿ\s]{0,40}$/
 
     if(state.name.length === 0) error.name = 'Complete this field!'
-    if(!/^[a-zA-ZÀ-ÿ\s]{0,40}$/.test(state.name)) error.name = 'Field must be character only!'
-    if(state.image && !regexUrl.test(state.image)) error.image = 'Field must be a url!'
+    if(!onlyLetters.test(state.name)) error.name = 'Field must be character only!'
+    if(state.image && !onlyUrl.test(state.image)) error.image = 'Field must be a url!'
     if(state.hp && !/^[0-9]*$/.test(state.hp)) error.hp = 'Only numbers!'
     if(state.attack && !/^[0-9]*$/.test(state.attack)) error.attack = 'Only numbers!'
     if(state.defense && !/^[0-9]*$/.test(state.defense)) error.defense = 'Only numbers!'
@@ -41,7 +42,6 @@ export default function CreatePokemon () {
 
     const history = useHistory()
     const pokemonToUpdate = history.location.state  //props.history.location.state // De aquí vienen datos del componente detail
-    console.log('pokemonToUpdate:', pokemonToUpdate);
     console.log('pokemonToUpdate:', pokemonToUpdate);
     const dispatch = useDispatch()
     const { types } = useSelector(state => state)
@@ -68,26 +68,37 @@ export default function CreatePokemon () {
     }, [])
 
 
-    const handleChange = (e) => {
+    const handleChange = ({ target }) => {
         // No consultar el estado desde aquí porque me dará un estado anterior
 
-        if(e.target.name === 'types') {
-            if(!state.types.includes(e.target.value)) {
-                setState({ ...state, types: state.types.length <= 3 ? [...state.types, e.target.value] : state.types })
-                setErrors(validation({ ...state, types: [...state.types, e.target.value] }))
+        if( target.name === 'types' ) {
+            if(!state.types.includes(target.value)) {
+                setState({ 
+                    ...state, 
+                    types: state.types.length <= 3 ? [...state.types, target.value] : state.types 
+                })
+                setErrors(validation({ ...state, types: [...state.types, target.value] }))
 
             } else setErrors({...errors, types: "Types cannot be repeated!"})
 
         } else {
-            setState({ ...state, [e.target.name]: e.target.value })
-            setErrors(validation({ ...state, [e.target.name]: e.target.value }))
+            const newState = { ...state, [target.name]: target.value }
+            setState(newState)
+            setErrors(validation(newState))
         }
     }
 
     const deleteType = (name) => {
-        setState({ ...state, types: state.types.filter(type => type !== name) })
+        const newTypes = state.types.filter(type => type !== name)
+        setState({ 
+            ...state, 
+            types: newTypes 
+        })
         // Tengo que pasarale el estado así para que valide el actual y no el anterior
-        setErrors(validation({ ...state, types: state.types.filter(type => type !== name) }))
+        setErrors(validation({ 
+            ...state, 
+            types: newTypes 
+        }))
     }
 
     const handleSubmit = (e) => {
