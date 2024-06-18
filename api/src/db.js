@@ -14,8 +14,28 @@ const {
 
 let sequelize =
   process.env.NODE_ENV === "production"
-    ? new Sequelize(`
-      postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DATABASE}`)
+    ? new Sequelize({
+        database: POSTGRES_DATABASE,
+        dialect: "postgres",
+        host: POSTGRES_HOST,
+        port: 5432,
+        username: POSTGRES_USER,
+        password: POSTGRES_PASSWORD,
+        pool: {
+          max: 3,
+          min: 1,
+          idle: 10000,
+        },
+        dialectOptions: {
+          ssl: {
+            require: true,
+            // Ref.: https://github.com/brianc/node-postgres/issues/2009
+            rejectUnauthorized: false,
+          },
+          keepAlive: true,
+        },
+        ssl: true,
+      })
     : new Sequelize(
         `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DATABASE}`,
         { logging: false, native: false }
