@@ -15,7 +15,6 @@ import { useLocation } from 'react-router-dom';
 export default function Home() {
     const dispatch = useDispatch()
     const location = useLocation()
-    console.log(location)
     const { pokemons } = useSelector(state => state.pokemons)
     const [ notFound, setNotFound ] = useState(null)
 
@@ -55,14 +54,9 @@ export default function Home() {
             
             fetchData()
         } catch (error) {
-            console.log(error)
             throw error
         }
     }, []);
-
-    // DEBUG - ZONE
-    // console.log('pokemons:', pokemons);
-    // console.log('currentPokemons:', currentPokemons);
 
     return (
         <>

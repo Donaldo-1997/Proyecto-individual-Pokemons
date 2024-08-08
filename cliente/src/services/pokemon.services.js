@@ -14,6 +14,17 @@ export async function fetchAllPokemons() {
     }
 }
 
+export async function fetchPokemonByName(name) {
+    try {
+        const { data } = await axios.get(`${API_URL}/pokemons?name=${name}`)
+        data.forEach(e => e.types = e.types.map(t => t.name))
+        
+        return data
+    } catch (error) {
+        throw error
+    }
+}
+
 export async function fetchTypes() {
     try {
         const types = (await axios.get(`${API_URL}/types`)).data.map(t => t.name)
@@ -90,7 +101,7 @@ export function removeDuplicates(array) {
 export const fetchWithRetry = async (url, options = {}, retries = 5, delay = 1000) => {
     try {
       const response = await axios(url, options)
-      return response.data // O el formato que necesites
+      return response.data 
     } catch (error) {
       if (retries > 0) {
         console.error(`Error en la solicitud, reintentando en ${delay / 1000} segundos...`, error)
@@ -103,9 +114,6 @@ export const fetchWithRetry = async (url, options = {}, retries = 5, delay = 100
 }
 
 export const validation = (state) => {
-
-    console.log('state: ', state);
-
     const error = {}
     const onlyUrl = /[(http(s)?):(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*){0,255}$/
     const onlyLetters = /^[a-zA-ZÀ-ÿ\s]{0,40}$/
@@ -127,8 +135,6 @@ export const validation = (state) => {
     if(state.weight && (state.weight > 100 || state.weight < 0)) error.weight = 'Must be in the range 0 to 100'
     if(state.types.length === 0) error.types = 'Select at least one type!'
     if(state.types.length > 3) error.types = 'You can only select three types!'
-
-    console.log('error: ', error);
 
     return error
 }

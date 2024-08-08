@@ -1,9 +1,6 @@
 import styled from "styled-components"
 
 export default function MessagePopUp ({ message }) {
-    // console.log('MessagePopup montado');
-    
-
     return <>
         <ContainerPopUp>
             <span>{message}</span>

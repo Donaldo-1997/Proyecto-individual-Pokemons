@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from "react-router-dom"
 import { cleanDetail, deletePokemonAction } from "../redux/pokemonSlice"
 import { deletePokemon, popUpMessage } from "../services/pokemon.services"
-import { toast, Zoom } from "react-toastify"
 import styled from "styled-components"
 import spinner from '../assets/img/spinner.gif'
 
@@ -22,7 +21,6 @@ export default function DetailPokemon ({ pokemon }) {
         if(confirmation) {
             deletePokemon(id)
                 .then(res => {
-                    console.log(res)
                     popUpMessage({
                         message: res.data,
                         succes: true
@@ -31,7 +29,6 @@ export default function DetailPokemon ({ pokemon }) {
                     dispatch(deletePokemonAction(id))
                 }) 
                 .catch(error => {
-                    console.log(error)
                     popUpMessage({
                         message: error.response.data,
                         succes: false

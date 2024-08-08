@@ -7,8 +7,6 @@ import { getAllPokemons, getTypes } from "../redux/pokemonSlice";
 import styled from 'styled-components'
 import { fetchAllPokemons, fetchTypes } from "../services/pokemon.services";
 
-const API_URL = import.meta.env.VITE_API_URL
-
 export default function Landing() {
 
     const dispatch = useDispatch()
@@ -26,7 +24,6 @@ export default function Landing() {
             
             fetchData()
         } catch (error) {
-            console.log(error)
             throw error
         }
     }, [])

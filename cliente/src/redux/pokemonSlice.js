@@ -22,7 +22,6 @@ export const pokemonSlice = createSlice({
     filterPokemons: (state, action) => {
       const { activeFilters } = action.payload
       
-      // console.log('FILTER_POKEMONS', activeFilters)
       state.pokemons = filterAndOrderPokemons(state.copyPokemons, activeFilters)
     },
     getPokemonByName: (state, action) => {

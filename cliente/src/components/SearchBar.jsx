@@ -1,10 +1,8 @@
 import { useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { getPokemonByName } from "../redux/pokemonSlice"
 import styled from "styled-components"
-import axios from "axios"
-
-const API_URL = import.meta.env.VITE_API_URL
+import { fetchPokemonByName } from "../services/pokemon.services"
 
 export default function SearchBar({ setNotFound }) {
 
@@ -20,20 +18,15 @@ export default function SearchBar({ setNotFound }) {
         e.preventDefault()
         setName('')
 
-        axios.get(`${API_URL}/pokemons?name=${name}`)
+        fetchPokemonByName(name)
             .then(res => {
-                console.log('res:', res)
-                res.data.forEach(e => e.types = e.types.map(t => t.name))
-                dispatch(getPokemonByName(res.data))
+                dispatch(getPokemonByName(res))
             })
             .catch(error => {
-                console.log('error:', error)
                 setNotFound(error.response.data)
-            })
-
-        
-        
+            })  
     }
+
     return (
         <form onSubmit={searchPokemon}>
         <InputContainer>

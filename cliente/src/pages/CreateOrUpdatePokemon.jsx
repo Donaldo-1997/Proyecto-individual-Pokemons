@@ -13,7 +13,6 @@ export default function CreatePokemon () {
     const location = useLocation()
     const navigate = useNavigate()
     const pokemonToUpdate = location.state // De aquí vienen datos del componente detail
-    // console.log('pokemonToUpdate:', pokemonToUpdate);
     const dispatch = useDispatch()
     const { types } = useSelector(state => state.pokemons)
 
@@ -40,7 +39,7 @@ export default function CreatePokemon () {
             
             fetchData()
         } catch (error) {
-            console.log(error)
+            throw error
         }
     }, [])
 
@@ -86,7 +85,6 @@ export default function CreatePokemon () {
             if(pokemonToUpdate) {     
                 updatePokemon(pokemonToUpdate.id, state)
                     .then(res => {
-                        console.log('res:', res)
                         if(res.status === 200) {
                             setState({ name: '', image: '', height: '', weight: '', hp: '', 
                                attack: '', defense: '', speed: '', types: [] })
@@ -97,7 +95,6 @@ export default function CreatePokemon () {
                         }
                     })
                     .catch(error => {
-                        console.log(error)
                         popUpMessage({
                             message: error.response.data,
                             success: false
@@ -107,7 +104,6 @@ export default function CreatePokemon () {
             } else {
                 createPokemon(state)
                     .then(res => {
-                        console.log('msg:', res)
                         setState({
                             name: '', image: '', height: '', weight: '', hp: '', 
                             attack: '', defense: '', speed: '', types: []   
@@ -118,7 +114,6 @@ export default function CreatePokemon () {
                         })
                     })    
                     .catch(error => {
-                        console.log(error);
                         popUpMessage({
                             message: error.response.data,
                             success: false
