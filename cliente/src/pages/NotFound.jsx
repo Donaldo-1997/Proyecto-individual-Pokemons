@@ -1,18 +1,22 @@
-import { useNavigate } from "react-router-dom"
 import pokemonNotFound from '../assets/img/pokemon-go-1574001_1280.webp'
-
+import styled from "styled-components"
+import Nav from "../components/Nav"
 
 export default function NotFound() {
-
-    const history = useNavigate()
-
     return (
-        <div className="not_found">
-            <div>
-                <h1>Page not found</h1>
-                <img src={pokemonNotFound} alt="not-found" className='image_not_found' />
-                <div className="back_btn not_found"><span onClick={() => history.push('/home')}>←</span></div>
-            </div>
-        </div>
+        <>
+        <Nav />
+        <Container>
+            <h1>Page not found</h1>
+            <img src={pokemonNotFound} alt="not-found"/>
+        </Container>
+        </>
     )
 }
+
+const Container = styled.div`
+    text-align: center;
+    img {
+        max-width: 30vw;
+    }
+`
