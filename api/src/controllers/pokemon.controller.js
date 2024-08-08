@@ -1,8 +1,6 @@
 const axios = require('axios')
-const { Type } = require('../db')
-
-let fastLoadPokemons = []
-let nextPokemonData = []
+const { Type, Pokemon } = require('../db')
+const { Op } = require('sequelize')
 
 const transformInformation = (arrayData) => {
     return arrayData.map(p => ({
@@ -19,45 +17,58 @@ const transformInformation = (arrayData) => {
     }))
 }
 
+async function savePokemonsToDb(pokemons) {
+    try {
+        pokemons.forEach(async (pokemon) => {
+            console.log(pokemon)
+            const { name, hp, attack, defense, speed, height, weight } = pokemon
+            const image = pokemon.image.length ? pokemon.image : undefined
+            const types = pokemon.types.map(type => type.name)
+     
+            const [ newPokemon, created ] = await Pokemon.findOrCreate({ 
+                where: { name },
+                defaults: { image, hp, attack, defense, speed, height, weight } 
+            })
+    
+            if(created) {
+                const typesDB = types ? await Type.findAll({
+                    where: { name: { [Op.or]: types } }
+                }) : []
+        
+                typesDB.forEach( async ({ dataValues }) => await newPokemon.addType(dataValues.id))
+            }
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
 module.exports = {
-    getAllsApi: async () => {
-        if(fastLoadPokemons.length === 0) {
+    getAlls: async () => {
+        const pokemonsDB = await Pokemon.findAll({ include: Type })
+
+        if(pokemonsDB.length === 0) {
             try {
-                const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=40')
-
-                // Me preparo con la siguiente consulta, teniendo los datos listos para enviar
-                // en cuanto se soliciten
-                axios.get(data.next)
-                    .then(async ({ data }) => {
-                        const pokePromises = []
-                        data.results.forEach(poke => pokePromises.push(axios.get(poke.url)))
-
-                        const resultOfPromiseAll = (await Promise.all(pokePromises)).map(promise => promise.data)
-
-                        nextPokemonData = transformInformation(resultOfPromiseAll)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                        throw error
-                    })
-
+                const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=100')
                 const pokePromises = []
                 // requests a "p.url" para obtener la info necesaria
                 data.results.forEach( p => pokePromises.push(axios.get(p.url)) )
-    
+                
                 const result = (await Promise.all(pokePromises)).map(p => p.data)
                 // console.log('pokePromises',pokePromises)
                 const pokemons = transformInformation(result)
-    
-                fastLoadPokemons = [...pokemons]
+                
+                savePokemonsToDb(pokemons)
+
                 return pokemons     
                 
             } catch (error) {
+                console.log(error)
                 throw error
             }
         }
 
-        return fastLoadPokemons
+        return pokemonsDB
     },
     getTypes: async () => {
 
@@ -77,21 +88,41 @@ module.exports = {
         }
     },
 
-    getByNameApi: async (name) => {
+    getByName: async (name) => {
         try {
-            const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
-            const pokemon = {
-                id: data.id,
-                name: data.name,
-                image: data.sprites.other.dream_world.front_default,
-                height: data.height,
-                weight: data.weight,
-                types: data.types.map(t => ({ name: t.type.name })),
-                hp: data.stats[0].base_stat,
-                attack: data.stats[1].base_stat,
-                defense: data.stats[2].base_stat,
-                speed: data.stats[5].base_stat,
+            let pokemons = await Pokemon.findAll({ 
+                where: { 
+                    name: { [Op.iLike]: `${name}%` }
+                }, 
+                include: Type 
+            })
+        
+            if(pokemons === null) {
+                const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+                pokemons = transformInformation(data)
             }
+
+            pokemons.forEach(e => e.types = e.types.map(t => t.name))
+
+            return pokemons
+
+        } catch (error) {
+            throw error
+        }
+    },
+    
+    getByType: async (type) => {
+        try {
+            let pokemon = await Pokemon.findOne({ 
+                include: [
+                    {
+                        model: Type,
+                        where: {
+                            name: type
+                        }
+                    }
+                ] 
+            })
 
             return pokemon
 
@@ -100,21 +131,10 @@ module.exports = {
         }
     },
 
-    getByIdApi: async (id) => {
+    getById: async (id) => {
         try {
             const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
-            const pokemon = {
-                id: data.id,
-                name: data.name,
-                image: data.sprites.other.dream_world.front_default,
-                height: data.height,
-                weight: data.weight,
-                types: data.types.map(t => ({ name: t.type.name })),
-                hp: data.stats[0].base_stat,
-                attack: data.stats[1].base_stat,
-                defense: data.stats[2].base_stat,
-                speed: data.stats[5].base_stat,
-            }
+            const pokemon = transformInformation(data)
 
             return pokemon
 

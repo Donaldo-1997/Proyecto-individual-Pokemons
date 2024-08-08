@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { Op } = require('sequelize');
-const { getAllsApi, getByNameApi, getByIdApi } = require('../controllers/pokemon.controller');
+const { getAlls, getByName, getById } = require('../controllers/pokemon.controller');
 const { Pokemon, Type } = require('../db')
 
 const router = Router();
@@ -10,25 +10,25 @@ router.get('/pokemons', async (req, res) => {
 
     if(name) {
         try {
-            let pokemon = await Pokemon.findOne({ where: { name }, include: Type })
-
-            if(pokemon === null) pokemon = await getByNameApi(name)
-
-            res.status(200).json(pokemon)
+            const pokemons = await getByName(name)
+            console.log(pokemons)
+            res.status(200).json(pokemons)
             
         } catch (error) {
             res.status(404).send(`Pokemon "${name}" not found`)
         }
 
-    } else {
+    } 
+    else {
         try {
             // BUSCANDO TODOS
-            const pokemonsDb = await Pokemon.findAll({ include: Type })
-            const pokemonsApi = await getAllsApi()
+            const pokemons = await getAlls()
 
-            res.status(200).json([...pokemonsDb, ...pokemonsApi])
+            res.status(200).json(pokemons)
 
         } catch (error) {
+
+            console.log(error)
             res.status(500).json(error)
         }
     }
@@ -46,7 +46,7 @@ router.get('/pokemons/:id', async (req, res) => {
             where: { id },
             include: Type 
         })
-        else pokemon = await getByIdApi(id)
+        else pokemon = await getById(id)
 
         if(pokemon) res.status(200).json(pokemon)
 
@@ -63,11 +63,12 @@ router.post('/pokemons', async (req, res) => {
 
     if(name) {
         try {
+            console.log(name)
             const image = req.body.image.length ? req.body.image : undefined
 
             const [ newPokemon, created ] = await Pokemon.findOrCreate({ 
                 where: { name },
-                defaults: { image, hp, attack, defense, speed, height, weight } 
+                defaults: { image, hp, attack, defense, speed, height, weight, createdByUser: true } 
             })
 
             if(created) {
@@ -80,7 +81,7 @@ router.post('/pokemons', async (req, res) => {
                 res.status(201).send('Pokemon created successfully!')
 
             } else {
-                res.status(400).send(`Pokemon "${name}" already exists!`)
+                res.status(400).send(`"${name}" already exists!`)
             }
 
         } catch (error) {
@@ -133,7 +134,7 @@ router.put('/pokemons/:id', async (req, res) => {
 
         await pokemonUpdated.save()
 
-        res.status(200).send(`Pokemon "${name}" updated successfully`)
+        res.status(200).send(`"${name}" updated successfully`)
         
     } catch (error) {
         console.log(error);

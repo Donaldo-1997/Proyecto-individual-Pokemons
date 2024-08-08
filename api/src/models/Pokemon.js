@@ -35,6 +35,10 @@ module.exports = (sequelize) => {
     },
     weight: {
       type: DataTypes.STRING
+    },
+    createdByUser: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     timestamps: false
