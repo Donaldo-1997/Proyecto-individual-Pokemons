@@ -16,6 +16,7 @@ export default function Home() {
     const dispatch = useDispatch()
     const location = useLocation()
     const { pokemons } = useSelector(state => state.pokemons)
+    console.log(pokemons)
     const [ notFound, setNotFound ] = useState(null)
 
     const [currentPage, setCurrentPage] = useState(1)

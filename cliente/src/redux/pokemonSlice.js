@@ -13,8 +13,8 @@ export const pokemonSlice = createSlice({
   },
   reducers: {
     getAllPokemons: (state, action) => {
-      state.pokemons = removeDuplicates(action.payload)
-      state.copyPokemons = removeDuplicates(action.payload)
+      state.pokemons = action.payload
+      state.copyPokemons = action.payload
     },
     getPokemonById: (state, action) => {
       state.pokemon = action.payload
@@ -36,6 +36,8 @@ export const pokemonSlice = createSlice({
     filtered: (state, action) => {
       state.filter = action.payload
     },
+    createPokemonAction: (state, action) => {
+    },
     deletePokemonAction: (state, action) => {
       state.pokemons = state.pokemons.filter(p => p.id !== action.payload)
     }
@@ -50,6 +52,7 @@ export const {
   getTypes,
   filtered,
   cleanDetail,
+  createPokemonAction,
   deletePokemonAction
 } = pokemonSlice.actions
 

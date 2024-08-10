@@ -22,7 +22,7 @@ export default function DetailPokemon ({ pokemon }) {
             deletePokemon(id)
                 .then(res => {
                     popUpMessage({
-                        message: res.data,
+                        message: res,
                         succes: true
                     })
 
@@ -30,7 +30,7 @@ export default function DetailPokemon ({ pokemon }) {
                 }) 
                 .catch(error => {
                     popUpMessage({
-                        message: error.response.data,
+                        message: error,
                         succes: false
                     })
                 })

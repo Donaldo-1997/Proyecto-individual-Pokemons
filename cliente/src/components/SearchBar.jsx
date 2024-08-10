@@ -23,7 +23,7 @@ export default function SearchBar({ setNotFound }) {
                 dispatch(getPokemonByName(res))
             })
             .catch(error => {
-                setNotFound(error.response.data)
+                setNotFound(error)
             })  
     }
 

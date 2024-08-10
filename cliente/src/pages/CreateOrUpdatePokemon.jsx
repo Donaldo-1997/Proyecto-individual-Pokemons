@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useNavigate } from "react-router-dom"
-import { getTypes } from "../redux/pokemonSlice.js"
+import { createPokemonAction, getTypes } from "../redux/pokemonSlice.js"
 import { createPokemon, fetchTypes, popUpMessage, updatePokemon, validation } from "../services/pokemon.services"
 import Nav from '../components/Nav.jsx'
 import styled from "styled-components"
@@ -26,7 +26,8 @@ export default function CreatePokemon () {
         speed: pokemonToUpdate ? pokemonToUpdate.speed :  '',
         height: pokemonToUpdate ? pokemonToUpdate.height :  '',
         weight: pokemonToUpdate ? pokemonToUpdate.weight :  '',
-        types: pokemonToUpdate ? [...pokemonToUpdate.types] :  []
+        types: pokemonToUpdate ? [...pokemonToUpdate.types] :  [],
+        createdByUser: true   
     })
 
 
@@ -84,38 +85,37 @@ export default function CreatePokemon () {
 
             if(pokemonToUpdate) {     
                 updatePokemon(pokemonToUpdate.id, state)
-                    .then(res => {
-                        if(res.status === 200) {
-                            setState({ name: '', image: '', height: '', weight: '', hp: '', 
-                               attack: '', defense: '', speed: '', types: [] })
-                            
-                            navigate('/home', { 
-                                state: { message: res.data }
-                            })
-                        }
+                    .then(response => {
+                        setState({ name: '', image: '', height: '', weight: '', hp: '', 
+                            attack: '', defense: '', speed: '', types: [] })
+                        
+                        navigate('/home', { 
+                            state: { message: response }
+                        })
                     })
                     .catch(error => {
                         popUpMessage({
-                            message: error.response.data,
+                            message: error,
                             success: false
                         })
                     })
 
             } else {
                 createPokemon(state)
-                    .then(res => {
+                    .then(response => {
                         setState({
                             name: '', image: '', height: '', weight: '', hp: '', 
                             attack: '', defense: '', speed: '', types: []   
                         })
                         popUpMessage({
-                            message: res.data,
+                            message: response,
                             success: true
                         })
                     })    
                     .catch(error => {
+                        console.log(error)
                         popUpMessage({
-                            message: error.response.data,
+                            message: error,
                             success: false
                         })
                     })

@@ -1,14 +1,18 @@
 import axios from "axios"
 import { toast, Zoom } from "react-toastify"
+import { mockupsTypes, Pokemons } from "../lib/placeholder-data"
 
 const API_URL = import.meta.env.VITE_API_URL
 
+const pokeDex = new Pokemons()
+
 export async function fetchAllPokemons() {
     try {
-        const pokemons = await fetchWithRetry(`${API_URL}/pokemons`)
-        pokemons.forEach(e => e.types = e.types.map(t => t.name))
-    
-        return pokemons
+        // const pokemons = await fetchWithRetry(`${API_URL}/pokemons`)
+        // pokemons.forEach(e => e.types = e.types.map(t => t.name))
+        
+        const { data } = pokeDex.getAll()
+        return data
     } catch (error) {
         throw error
     }
@@ -16,19 +20,21 @@ export async function fetchAllPokemons() {
 
 export async function fetchPokemonByName(name) {
     try {
-        const { data } = await axios.get(`${API_URL}/pokemons?name=${name}`)
-        data.forEach(e => e.types = e.types.map(t => t.name))
+        // const pokemons = (await axios.get(`${API_URL}/pokemons?name=${name}`)).data
+        // pokemons.forEach(e => e.types = e.types.map(t => t.name))
         
+        const { data } = pokeDex.getByName(name)
         return data
     } catch (error) {
-        throw error
+        console.log(error)
+        // throw error
     }
 }
 
 export async function fetchTypes() {
     try {
-        const types = (await axios.get(`${API_URL}/types`)).data.map(t => t.name)
-        return types
+        // const types = (await axios.get(`${API_URL}/types`)).data.map(t => t.name)
+        return mockupsTypes().map(type => type.name)
     } catch (error) {
         throw error
     }
@@ -36,9 +42,12 @@ export async function fetchTypes() {
 
 export const createPokemon = async (pokemonData) => {
     try {
-        const data = await axios.post(`${API_URL}/pokemons`, pokemonData)
-        return data
+        // const data = await axios.post(`${API_URL}/pokemons`, pokemonData)
+        // return data
         
+
+        const { data } = pokeDex.create(pokemonData)
+        return data
     } catch (error) {
         throw error
     }
@@ -46,9 +55,11 @@ export const createPokemon = async (pokemonData) => {
 
 export const updatePokemon = async (id, pokemonUpdated) => {
     try {
-        const data = await axios.put(`${API_URL}/pokemons/${id}`, pokemonUpdated)
-        return data
+        // const data = await axios.put(`${API_URL}/pokemons/${id}`, pokemonUpdated)
+        // return data
         
+        const { data } = pokeDex.update(id, pokemonUpdated)
+        return data
     } catch (error) {
         throw error
     }
@@ -56,7 +67,10 @@ export const updatePokemon = async (id, pokemonUpdated) => {
 
 export const deletePokemon = async (id) => {
     try {
-        const data = await axios.delete(`${API_URL}/pokemons/${id}`)
+        // const data = await axios.delete(`${API_URL}/pokemons/${id}`)
+        // return data
+
+        const { data } = pokeDex.delete(id)
         return data
     } catch (error) {
         
